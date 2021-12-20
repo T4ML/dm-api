@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>당뇨병 위험율 예측하기</title>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+  <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+</head>
+<body style="background: rgb(252, 250, 250);">
+  <div class="login">
+   <h1 style="text-align:center">당뇨병 위험 예측 </h1>
+    <form action="{{ url_for('predict')}}" method="post">
+      <label for="T_AGE"> ■ 만 나이    만 ________ 세 :  </label>
+<br>
+<input type=text name="T_AGE" placeholder="T_AGE" required='required'>
+<br>
+<label for="T_INCOME"> ■ 귀하 가정의 월  평균 수입은 어느 정도 되십니까?   □1 50만원 미만   □2 50-100만원미만    □3 100-150만원 미만   □4 150-200만원 미만    □5 200-300만원 미만   □6 300-400만원 미만   □7 400-600만원 미만    □8 600만원 이상 :  </label>
+<br>
+<select id="T_INCOME" name="T_INCOME" placeholder="T_INCOME", required='required'>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+<option value="7">7</option>
+<option value="8">8</option>
+</select>
+<br>
+<label for="T_MARRY"> ■ 귀하의 현재 결혼 상태는 어떠하십니까?   □1 미혼   □2 기혼   □3 별거   □4 이혼   □5 사별   □6 기타 :  </label>
+<br>
+<select id="T_MARRY" name="T_MARRY" placeholder="T_MARRY", required='required'>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+</select>
+<br>
+<label for="T_DRINK"> ■ 귀하는 원래 술을 못 마시거나 또는 처음부터(종교적인 이유 등으로) 술을 안 마십니까?   □1 예(비음주)   □2 아니오(과거음주)   □3 아니오(현재음주) :  </label>
+<br>
+<select id="T_DRINK" name="T_DRINK" placeholder="T_DRINK", required='required'>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+</select>
+<br>
+<label for="T_DRDU"> ■ 귀하는 원래 술을 못 마시거나 또는 처음부터(종교적인 이유 등으로) 술을 안 마십니까?   □1 예. 술을 안 마십니다   □2 아니오(과거음주)   □3 아니오(현재음주)       ▶ 지금까지 총 몇 년간 드셨습니까?          ① 5년 이하          ② 6-10년          ③ 11-20년            ④ 21년 이상 :  </label>
+<br>
+<select id="T_DRDU" name="T_DRDU" placeholder="T_DRDU", required='required'>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+</select>
+<br>
+<label for="T_TAKFQ">        ▶ 지난 1년 주류별 음주 횟수 및 총량          1-a) 막걸리를 1년 동안 드신 평균횟수는?               ⓪ 없다               ① 월 1회               ② 월 2-3회               ③ 주 1회               ④ 주 2-3회               ⑤ 주 4-6회               ⑥ 매일 1회 이상 :  </label>
+<br>
+<select id="T_TAKFQ" name="T_TAKFQ" placeholder="T_TAKFQ", required='required'>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+</select>
+<br>
+<label for="T_TAKAM">                ▷ 막걸리를 한 번 드실 때의 평균총량은?                  ________ 막걸리잔(240cc)                  ※ 막걸리 1되 = 7잔, 1잔 당 240cc 기준임. :  </label>
+<br>
+<input type=text name="T_TAKAM" placeholder="T_TAKAM" required='required'>
+<br>
+<label for="T_RICEFQ">           2-a) 정종을 1년 동안 드신 평균횟수는?               ⓪ 없다               ① 월 1회               ② 월 2-3회               ③ 주 1회               ④ 주 2-3회               ⑤ 주 4-6회               ⑥ 매일 1회 이상 :  </label>
+<br>
+<select id="T_RICEFQ" name="T_RICEFQ" placeholder="T_RICEFQ", required='required'>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+</select>
+<br>
+<label for="T_RICEAM">                ▷ 정종을 한 번 드실 때의 평균총량은?                  ________ 소주잔(50cc)                  ※ 소주잔 1잔 당 50cc 기준임. :  </label>
+<br>
+<input type=text name="T_RICEAM" placeholder="T_RICEAM" required='required'>
+<br>
+<label for="T_WINEFQ">           3-a) 포도주를 1년 동안 드신 평균횟수는?               ⓪ 없다               ① 월 1회               ② 월 2-3회               ③ 주 1회               ④ 주 2-3회               ⑤ 주 4-6회               ⑥ 매일 1회 이상 :  </label>
+<br>
+<select id="T_WINEFQ" name="T_WINEFQ" placeholder="T_WINEFQ", required='required'>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+</select>
+<br>
+<label for="T_WINEAM">                ▷ 포도주를 한 번 드실 때의 평균총량은?                  ________ 포도주잔(90cc)                  ※ 와인 1병 = 8잔, 1잔 당 90cc 기준임.  :  </label>
+<br>
+<input type=text name="T_WINEAM" placeholder="T_WINEAM" required='required'>
+<br>
+<label for="T_SOJUFQ">           4-a) 소주를 1년 동안 드신 평균횟수는?               ⓪ 없다               ① 월 1회               ② 월 2-3회               ③ 주 1회               ④ 주 2-3회               ⑤ 주 4-6회               ⑥ 매일 1회 이상 :  </label>
+<br>
+<select id="T_SOJUFQ" name="T_SOJUFQ" placeholder="T_SOJUFQ", required='required'>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+</select>
+<br>
+<label for="T_SOJUAM">                ▷ 소주를 한 번 드실 때의 평균총량은?                  ________ 소주잔(50cc)                  ※ 소주 1병 = 6.5잔, 1잔 당 50cc 기준임. :  </label>
+<br>
+<input type=text name="T_SOJUAM" placeholder="T_SOJUAM" required='required'>
+<br>
+<label for="T_BEERFQ">           5-a) 맥주를 1년 동안 드신 평균횟수는?               ⓪ 없다               ① 월 1회               ② 월 2-3회               ③ 주 1회               ④ 주 2-3회               ⑤ 주 4-6회               ⑥ 매일 1회 이상 :  </label>
+<br>
+<select id="T_BEERFQ" name="T_BEERFQ" placeholder="T_BEERFQ", required='required'>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+</select>
+<br>
+<label for="T_BEERAM">                ▷ 맥주를 한 번 드실 때의 평균총량은?                  ________ 맥주잔(220cc)                  ※ 맥주 1병 = 2.5잔, 1잔 당 220cc 기준임. :  </label>
+<br>
+<input type=text name="T_BEERAM" placeholder="T_BEERAM" required='required'>
+<br>
+<label for="T_HLIQFQ">           6-a) 양주를 1년 동안 드신 평균횟수는?               ⓪ 없다               ① 월 1회               ② 월 2-3회               ③ 주 1회               ④ 주 2-3회               ⑤ 주 4-6회               ⑥ 매일 1회 이상 :  </label>
+<br>
+<select id="T_HLIQFQ" name="T_HLIQFQ" placeholder="T_HLIQFQ", required='required'>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+</select>
+<br>
+<label for="T_HLIQAM">                ▷ 양주를 한 번 드실 때의 평균총량은?                  ________ 양주잔(30cc)                  ※ 양주 1병 = 23잔, 1잔 당 30cc 기준임. :  </label>
+<br>
+<input type=text name="T_HLIQAM" placeholder="T_HLIQAM" required='required'>
+<br>
+<label for="T_SMOKE"> ■ 귀하는 지금까지 담배를 피운 적이 있습니까?   □1 아니오   □2 예(과거흡연)   □3 예(현재흡연) :  </label>
+<br>
+<select id="T_SMOKE" name="T_SMOKE" placeholder="T_SMOKE", required='required'>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+</select>
+<br>
+<label for="T_SMDUYR">        2) 지금까지 피우신 총 기간은?          총 ________ 년________ 개월 :  </label>
+<br>
+<input type=text name="T_SMDUYR" placeholder="T_SMDUYR" required='required'>
+<br>
+<label for="T_SMDUMO">           지금까지 피우신 총 기간은?          총 ________ 년________ 개월 :  </label>
+<br>
+<input type=text name="T_SMDUMO" placeholder="T_SMDUMO" required='required'>
+<br>
+<label for="T_SMAM">        3) 하루에 대략 피우신 양은 얼마 정도입니까?          약 ________ 개비 :  </label>
+<br>
+<input type=text name="T_SMAM" placeholder="T_SMAM" required='required'>
+<br>
+<label for="T_PSM"> ■ 간접 흡연 경험이 있습니까?   □1 아니오   □2 예 :  </label>
+<br>
+<select id="T_PSM" name="T_PSM" placeholder="T_PSM", required='required'>
+<option value="1">1</option>
+<option value="2">2</option>
+</select>
+<br>
+<label for="T_EXER"> ■ 몸에 땀이 날 정도의 운동을 규칙적으로 하십니까?   □₁아니오   □₂예 :  </label>
+<br>
+<select id="T_EXER" name="T_EXER" placeholder="T_EXER", required='required'>
+<option value="1">1</option>
+<option value="2">2</option>
+</select>
+<br>
+  
+
+      <br>
+      <br>
+      <button type="submit" class="btn btn-primary btn-block btn-large">당뇨병 위험율 예측하기!</button>
+    </form>
+    <br>
+    <br>
+    <h2>
+    {{ prediction_text }}
+    </h2>
+  </div>
+</body>
+</html>
