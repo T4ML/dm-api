@@ -4,16 +4,18 @@ import pickle
 import os
 
 import pandas as pd
+from preprocessing import preprocessing
 
 
-
-BASEDIR = "c:/JupyterNotebook/PROJECT/PredictDiabetes/"
+BASEDIR = "C:/JupyterNotebook/PROJECT/dm-api/"
 os.chdir(BASEDIR)
 
 
 MODELDIR = "models/"
 model = pickle.load(open(MODELDIR+'RandomForestSimple.pickle','rb'))
-scaler = pickle.load(open(MODELDIR+'stdX3_scaler.pickle','rb'))
+# scaler3 = pickle.load(open(MODELDIR+'stdX3_scaler.pickle','rb'))
+
+
 app = Flask(__name__)
 @app.route('/')
 def home():
@@ -37,7 +39,7 @@ def predict():
         T_MARRY = int(request.form["T_MARRY"])
         T_HEIGHT = int(request.form["T_HEIGHT"])
         T_WEIGHT = int(request.form["T_WEIGHT"])
-        T_BMI = float(request.form["T_BMI"])
+        # T_BMI = float(request.form["T_BMI"])
         T_DRINK = int(request.form["T_DRINK"])
         T_DRDU = int(request.form["T_DRDU"])
         T_TAKFQ = int(request.form["T_TAKFQ"])
@@ -58,16 +60,22 @@ def predict():
         T_SMAM = int(request.form["T_SMAM"])
         T_PSM = int(request.form["T_PSM"])
         T_EXER = int(request.form["T_EXER"])
-
+        T_BMI= float(T_WEIGHT/(T_HEIGHT**2))
         
         #get prediction
-        input_cols = [[T_AGE,T_INCOME,T_MARRY,T_HEIGHT,T_WEIGHT,T_BMI,T_DRINK,T_DRDU,T_TAKFQ,T_TAKAM,T_RICEFQ,T_RICEAM,T_WINEFQ,T_WINEAM,T_SOJUFQ,T_SOJUAM,T_BEERFQ,T_BEERAM,T_HLIQFQ,T_HLIQAM,T_SMOKE,T_SMDUYR,T_SMDUMO,T_SMAM,T_PSM,T_EXER]]
+        input_data = [T_AGE,T_INCOME,T_MARRY,T_HEIGHT,T_WEIGHT,T_BMI,T_DRINK,T_DRDU,T_TAKFQ,T_TAKAM,T_RICEFQ,T_RICEAM,T_WINEFQ,T_WINEAM,T_SOJUFQ,T_SOJUAM,T_BEERFQ,T_BEERAM,T_HLIQFQ,T_HLIQAM,T_SMOKE,T_SMDUYR,T_SMDUMO,T_SMAM,T_PSM,T_EXER]
+        
 
-        col_names = ["T_ID","T_SEX","T_AGE","T_INCOME","T_MARRY","T_HTN","T_HTNAG","T_DM","T_DMAG","T_LIP","T_LIPAG","T_FMFHT1","T_FMFHT2","T_FMFDM1","T_FMFDM2","T_DRINK","T_DRDU","T_TAKFQ","T_TAKAM","T_RICEFQ","T_RICEAM","T_WINEFQ","T_WINEAM","T_SOJUFQ","T_SOJUAM","T_BEERFQ","T_BEERAM","T_HLIQFQ","T_HLIQAM","T_SMOKE","T_SMDUYR","T_SMDUMO","T_SMAM","T_PSM","T_EXER"]
-        input_df = pd.DataFrame(scaler.transform(np.array(input_cols).reshape(1,-1)), columns =col_names )
-        # input_df = pd.DataFrame(np.array(scaler.transform(input_cols)).reshape(-1,1), columns =["T_AGE", "T_INCOME", "T_BMI"] )
-        prediction = model.predict(input_df)
-        prob = round((model.predict_proba(input_df)[0] * 100)[1],2)
+        
+        # simple model used 3 cols
+        # input_df = pd.DataFrame(scaler3.transform(np.array(input_cols).reshape(1,-1)), columns =col_names )
+        # input_df = pd.DataFrame(np.array(scaler3.transform(input_cols)).reshape(-1,1), columns =["T_AGE", "T_INCOME", "T_BMI"] )
+        
+        processed_df = preprocessing(input_data)
+        
+        
+        prediction = model.predict(processed_df)
+        prob = round((model.predict_proba(processed_df)[0] * 100)[1],2)
         output = round(prediction[0], 2)
         if prediction == 0:
             res = "당뇨 음성"
